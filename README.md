@@ -1,7 +1,7 @@
 - 👋 Hi, I’m @nalinshivaprasad16
-- 👀 I’m interested in ... GCP ,AZURE , DEVOPS AND MONITORING 
-- 🌱 I’m currently learning ... GCP
-- 💞️ I’m looking to collaborate on ...GCP
+- 👀 I’m interested in ... AZURE , DEVOPS AND MONITORING 
+- 🌱 I’m currently learning ... AZURE
+- 💞️ I’m looking to collaborate on ...AZURE
 - 📫 How to reach me ...nalinshivaprasad@gmail.com
 
 <!---
