@@ -1,0 +1,112 @@
+Skip to end of metadata
+Created by Unknown User (e5605589), last modified by Nagaraj, Manjunath on Sep 11, 2022
+Go to start of metadata
+Introduction
+This document includes standard procedures, templates, guidelines and best practices for setting up monitor configuration and creating alert for Azure VMs and AKS VM Scale set.
+
+
+
+Purpose
+This document will illustrate best practices to provision necessary resources for achieving the task for Creating and configuration of monitor  on VMs and used  Log Analytics workspace to communicate with VMs  and  fetch the data from virtual machine then store the logs in Log analytics table.
+The document is meant to provide guidance for a specific use case that will continually be updated as changes to the process evolve.
+
+
+Pre-Requisites
+
+We will be creating following resources as pre-requisites of the solution:
+
+
+
+The Azure Log Analytics agent collects telemetry from Windows and Linux virtual machines in any cloud, on-premises machines,  and sends it collected data to your Log Analytics workspace in Azure Monitor.
+The Virtual machine and VM scale set should be connected to log analytics workspace.
+Each Client have their own log analytics workspace to write an alert query and store it on azure cloud.
+Creating an alert to wrt of client we need to use their own log analytics workspace in azure subscription. 
+ Log Analytics agent referred to as the Microsoft Monitoring Agent (MMA) or OMS Linux agent. it should install on all VMs,
+Counter should be added in  data source connector in log analytics.
+Monitoring Insights enable on VMs.
+Action group which helps us to configure the Distribution list to notify via emial.
+Kusto Query language to write log queries with Azure metrics like, Perf, azuremetric, Heartbeat, Azure Diagnostics etc..
+Integrate azure monitor alert with splunk-on-call we need endpoint routing key from Splunk. for more details refer here:https://help.victorops.com/knowledge-base/azure-monitoring-integration-guide-victorops/
+Overview
+Used log analytics workspace in Azure portal. Workspace has its own configuration, and data sources.  Log analytics is to store their data in a particular workspace. It collects data based on Perfmon counters from azure virtual machines and VM scale set, also azure resources in subscription. once Logs enabled on resource then  we can run log searches query  to analyze that data, and add a management solution to provide additional data and analytic insights.
+
+
+
+Azure monitor configured based on Change Tracking and Inventory in Azure Automation. This feature tracks changes in virtual machines and server infrastructure to help you pinpoint operational and environmental issues with software managed by the Distribution Package Manager. Items that are tracked by Change Tracking and Inventory include:
+
+Windows software
+Linux software (packages)
+Windows and Linux files
+Windows registry keys
+Microsoft services
+Linux daemons
+
+
+FIS Azure monitor use basic monitoring  parameter to set up alerts and values are as below
+CPU – Threshold (90%) Period (15) Frequency (15) severity (Critical) : When CPU usage more than 90% then alert trigger. Alert Collect data based on "Processor"
+RAM - Threshold (90%) Period (15) Frequency (15) severity (Critical) : When RAM usage more than 90% then alert trigger. Alert collect data based on "AvailableMbytes" or"% Committed Bytes In Use"
+Disk -  Threshold (90%) Period (15) Frequency (15) severity (Critical) :  When Disk usage more than 90% then alert trigger. Alert collect dat based on Logical disk space.
+Heartbeat- Threshold (5%) Period (15) Frequency (15) severity (Critical) : When VM heartbeat sopped then alert trigger
+Note: The Values of alert configuration can customized and we can set up change  values based on need.
+
+Also, there are  few more monitor alerts can be configured like:
+
+Service monitoring
+Port listen monitoring
+Event alert based on error message
+Database monitoring( Custom log)
+Application Gateway backend health/status
+Note: To configure custom log monitoring it should satisfy the guideline's of custom log[Refer here: https://docs.microsoft.com/en-us/azure/azure-monitor/agents/data-sources-custom-logs]  
+
+
+
+Monitoring Alert Set Up
+Solutions to comply with given use case include these steps but are not limited to the following:
+
+Using Kusto Query language to configure  azure monitor log alert set up.
+log alerts can be measured based on two types:
+Number of results - count of records returned by query 
+Metric measurement- Aggregate value  calculated using summarize grouped by expression chosen and bin selection
+Configuring alert based on Subscription level which includes all the resource which are hosted in it.
+Alert rule are targeted to specific to resource to monitor,  alert criteria is logics to evaluate , if condition met the alert will fire. condition and values are mention above in monitor parameter section. KQL indicate log  data that can indicate the issue.
+Action group is automated once we added DL to notify alert will sending to specific email. we are notifying alert via email system.
+If we integrated azure alert with splunk-on-call (Victorops) then we need to choose webhook and add the routing key from splunk team
+Inside VM monitoring alert section, if query syntax is correct then historical data for the query appears as a graph .
+The time range is the rule condition like Period time range limits query  data to the specified range.
+Threshold query results are transformed  into a number  that is compared against threshold value.
+Frequency Interval in which query is run.
+Total or Consecutive Breaches can also optionally set number of violations to trigger alert.
+Alert logic based on metric measurement, An alert  created if aggregate value in the results exceeds the threshold value provided.  The number of breaches for an alert is the number of times the threshold is exceeded in the chosen time period. we can specify Total breaches for any combination of breaches across the results set or Consecutive breaches to require that the breaches must occur in consecutive samples.
+we have configure the alert rule name , description if needed and severity of alert.
+Alert rule Description detailing specifics for the alert and Severity value from the options provided. These details are reused in all alert emails, notifications, or pushes done by Azure Monitor.
+Suppress Alert enabling if want suppress rule action  for a time after alert fired. Alert will create but action won't be trigger.
+Email Subject once we enable alert then can not modify the body  email.
+We do have a Netcool app which integrate with snow to create incident based on alert trigger function.
+Notification type:   Email/SMS/Push/Voice - Send these notification types to specific recipients.
+In Action group  specify if the alert rule should trigger one or more Action Group when alert condition is met. You can choose any existing Action Group or create a new one. With action groups, you can send perform a number of actions as send email(s). 
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+.
+
