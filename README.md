@@ -1,6 +1,6 @@
 - 👋 Hi, I’m @nalinshivaprasad
-- 👀 I’m interested in ... AZURE , DEVOPS and  ZABBIX 
+- 👀 I’m interested in ... AZURE, DEVOPS and  ZABBIX 
 - 🌱 I’m currently learning ... AZURE AND DEVOPS 
 - 💞️ I’m looking to collaborate on ...AZURE
--  🌱 Skills   :Azure ,Azure monitoring ,Zabbix , Tivoli , infrastructure and application monitoring 
+-  🌱 Skills:Azure monitoring, Zabbix, Tivoli Monitoring, infrastructure and application monitoring 
 - 📫 How to reach me ...nalinshivaprasad@gmail.com
