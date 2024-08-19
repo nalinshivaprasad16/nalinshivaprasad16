@@ -1,0 +1,380 @@
+
+This script helps in pulling situation details from different clients
+
+Run the script by passing the below mentioned arguments in the same order
+TEMS_NAME --> Specify the Active HTEMS hostname or IP
+USER_ID --> Enter a valid User ID
+PASSWORD --> Enter the credentials
+SIT_LIST --> Definea a file containing the list of situation for which we need to pull the threshold
+Formula_File --> Output file to be created with Formula details
+MSL_File --> Output file to be created with Distribution details
+TEC_File --> Output file to be created with TEC Forwarding details
+Sampling_File --> Output file to be created with Sampling Interval details
+
+#!/bin/bash
+# Make sure you supply the arguments in the same order #######################################################################################################
+# If all the parameters are not passed, script will not get executed further ###########################################################################################
+
+if [[ "${#}" -lt 8 ]]
+then
+        echo 'Run the script by passing the below mentioned arguments in the same order:'
+        echo 'TEMS_NAME --> Specify the Active HTEMS hostname or IP.'
+        echo 'USER_ID --> Enter a valid User ID.'
+        echo 'PASSWORD --> Enter the credentials.'
+        echo 'SIT_LIST --> Define a file containing the list of situation for which we need to pull the threshold.'
+        echo 'Formula_File --> Output file to be created with Formula details.'
+        echo 'MSL_File --> Output file to be created with Distribution details.'
+        echo 'TEC_File --> Output file to be created with TEC Forwarding details.'
+        echo 'Sampling_File --> Output file to be created with Sampling Interval details.'
+        exit 1
+fi
+
+# Display the parameters which were passed as arguments #######################################################################################################
+
+TEMS_NAME="${1}"
+echo 'Logged into server:'
+echo $TEMS_NAME
+USER_ID="${2}"
+echo 'Logged as:'
+echo $USER_ID
+PASSWORD="${3}"
+echo 'Credentials used:'
+echo $PASSWORD
+SIT_LIST="${4}"
+echo 'File containing the list of situations:'
+echo $SIT_LIST
+Formula_File="${5}"
+echo 'File with formula details:'
+echo $Formula_File
+MSL_File="${6}"
+echo 'File with distribution details:'
+echo $MSL_File
+TEC_File="${7}"
+echo 'File with TEC Forwarding details:'
+echo $TEC_File
+Sampling_File="${8}"
+echo 'File with Sampling interval details:'
+echo $Sampling_File
+
+# Login to tacmd console #####################################################################################################################################
+
+/opt/IBM/ITM/bin/tacmd login -s "${TEMS_NAME}" -u "${USER_ID}" -p "${PASSWORD}"
+
+# If the server details provided is not the primary HUB, script will not be executed any further #######################################################################
+
+if [[ "${?}" -ne 0 ]]
+then
+        exit 1
+fi
+
+# Code to extract the situation details #######################################################################################################################
+
+for j in `cat $SIT_LIST`
+do
+SituationFullName=`/opt/IBM/ITM/bin/tacmd viewsit -s $j | grep -i "Full Name"`
+Formulae=`/opt/IBM/ITM/bin/tacmd viewsit -s $j | grep -i "Formula"`
+MSL=`/opt/IBM/ITM/bin/tacmd viewsit -s $j | grep -i "Distribution"`
+TEC=`/opt/IBM/ITM/bin/tacmd viewsit -s $j | grep -i "TEC Forwarding"`
+Interval=`/opt/IBM/ITM/bin/tacmd viewsit -s $j | grep -i "Sampling Interval"`
+echo $SituationFullName
+echo $Formulae &>> $Formula_File
+echo $MSL &>> $MSL_File
+echo $TEC &>> $TEC_File
+echo $Interval &>> $Sampling_File
+done
+
+# End of Script #############################################################################################################################################
+
+Usage:
+
+	1. Copy the script on a server where you can connect to tacmd and give full permissions to the script file.
+	2. Create a file containing the list of situation.
+	3. Run the script.
+	
+	Example: 
+	cat ABE.list // create a file containing the list of situation for which you need to pull details.
+	ABE_STD_UXAX_ZO_PR_ZombieGT50_C
+	ABE_STD_UXAX_NW_PR_InterfaceDow
+	ABE_STD_UXAX_MP_PR_VCSProcessMi
+	ABE_STD_UXAX_MP_PR_ProcessMissi
+	ABE_STD_UXAX_CP_PR_GT95_C      
+	ABE_STD_UXAX_CP_PR_GT98_C      
+	ABE_STD_UXAX_NW_PR_InterfaceErr
+	ABE_STD_UXAX_NW_PR_OutputErrors
+	ABE_STD_UXAX_NW_PR_CollisionsGT
+	ABE_STD_UXAX_ME_PR_MemorySwapUt
+	ABE_STD_UXAX_FS_PR_InodesLT1000
+	ABE_STD_UXAX_FS_PR_InodesLT500 
+	ABE_STD_UXAX_FS_PR_Warn11_W    
+	ABE_STD_UXAX_FS_PR_Warn12_W    
+	ABE_STD_UXAX_FS_PR_Crit11_C    
+	ABE_STD_UXAX_FS_PR_Crit12_C    
+	ABE_STD_UXAX_FS_PR_GT95_C      
+	
+	./getformulae.sh ubd1rfissmctm01 sysadmin syadmin ABE.list Out_Formula Out_MSL Out_TEC Out_Sampling 
+	Logged into server:
+	ubd1rfissmctm01
+	Logged as:
+	sysadmin
+	Credentials used:
+	syadmin
+	File containing the list of situations:
+	ABE.list
+	File with formula details:
+	Out_Formula
+	File with distribution details:
+	Out_MSL
+	File with TEC Forwarding details:
+	Out_TEC
+	File with Sampling interval details:
+	Out_Sampling
+	
+	Validating user...
+	
+	KUIC00007I: User sysadmin logged into server on https://ubd1rfissmctm01:3661.
+	Full Name :
+	Full Name : ABE_STD_UXAX_NW_PR_InterfaceDown_C
+	Full Name : ABE_STD_UXAX_MP_PR_VCSProcessMissing_C
+	Full Name : ABE_STD_UXAX_MP_PR_ProcessMissing_C
+	Full Name :
+	Full Name :
+	Full Name : ABE_STD_UXAX_NW_PR_InterfaceErrors_C
+	Full Name : ABE_STD_UXAX_NW_PR_OutputErrorsGT10_C
+	Full Name : ABE_STD_UXAX_NW_PR_CollisionsGT10_C
+	Full Name : ABE_STD_UXAX_ME_PR_MemorySwapUtilized_C
+	Full Name : ABE_STD_UXAX_FS_PR_InodesLT1000w2_W
+	Full Name : ABE_STD_UXAX_FS_PR_InodesLT500_W
+	Full Name :
+	Full Name :
+	Full Name :
+	Full Name :
+	Full Name :
+	
+	Below output files will be created in the directory where you run the script. These files will have the details of Formula, MSL, EIF Forwarding and Sampling Interval details.
+	-rw-r--r-- 1 root     root   323 Jul 31 16:07 Out_TEC
+	-rw-r--r-- 1 root     root   477 Jul 31 16:07 Out_Sampling
+	-rw-r--r-- 1 root     root   567 Jul 31 16:07 Out_MSL
+	-rw-r--r-- 1 root     root  4295 Jul 31 16:07 Out_Formula
+	
+			
+If you are not providing all the arguments to run the script, script will terminate leaving a message 
+ 
+ ./getformulae.sh ubd1rfissmctm01 sysadmin
+Run the script by passing the below mentioned arguments in the same order:
+TEMS_NAME --> Specify the Active HTEMS hostname or IP.
+USER_ID --> Enter a valid User ID.
+PASSWORD --> Enter the credentials.
+SIT_LIST --> Define a file containing the list of situation for which we need to pull the threshold.
+Formula_File --> Output file to be created with Formula details.
+MSL_File --> Output file to be created with Distribution details.
+TEC_File --> Output file to be created with TEC Forwarding details.
+Sampling_File --> Output file to be created with Sampling Interval details.
+
+
+If you do not mention a primary HUB server, script will terminate leaving a message.
+
+[root@ubd1rfissmctm01 tmp]# ./getformulae.sh ubd1rfissmctm02 sysadmin syadmin ABE.list Out_Formula Out_MSL Out_TEC Out_Sampling
+Logged into server:
+ubd1rfissmctm02
+Logged as:
+sysadmin
+Credentials used:
+syadmin
+File containing the list of situations:
+ABE.list
+File with formula details:
+Out_Formula
+File with distribution details:
+Out_MSL
+File with TEC Forwarding details:
+Out_TEC
+File with Sampling interval details:
+Out_Sampling
+
+Validating user...
+
+KUIC00017E: tacmd is not allowed to connect to a secondary Hub
+
+A secondary HUB has been specified instead of the primary Hub
+
+Please, retry with the primary Hub
+
+	
+
+This script is used to create new situations, by modelling the existing ones.
+
+Run the script by passing the below mentioned arguments in the same order
+TEMS_NAME --> Specify the Active HTEMS hostname or IP
+USER_ID --> Enter a valid User ID 
+PASSWORD --> Enter the credentials
+NEW_SIT_LIST --> Define a file containing the list of new situations you want to create
+BASE_SIT_LIST --> Define a file containing the list of base situations you will use to create the new situation 
+
+#!/bin/bash
+##### Make sure you supply the arguments #####################################################################################################################
+##### If number of parameters passed in the script is less than 5, script will not be executed ##############################################################################
+
+if [[ "${#}" -lt 5 ]]
+then
+        echo 'Run the script by passing the below mentioned arguments in the same order:'
+        echo 'TEMS_NAME --> Specify the Active HTEMS hostname or IP'
+        echo 'USER_ID --> Enter a valid User ID'
+        echo 'PASSWORD --> Enter the credentials'
+        echo 'NEW_SIT_LIST --> Define a file containing the list of new situations you want to create.'
+        echo 'BASE_SIT_LIST --> Define a file containing the list of base situations you will use to create the new situation.'
+        exit 1
+fi
+
+##### Displaying the arguments provided #######################################################################################################################
+
+TEMS_NAME="${1}"
+echo 'Logged into server:'
+echo $TEMS_NAME
+USER_ID="${2}"
+echo 'Logged as:'
+echo $USER_ID
+PASSWORD="${3}"
+echo 'Credentials used:'
+echo $PASSWORD
+NEW_SIT_LIST="${4}"
+echo 'File containing the list of new situations to be created:'
+echo $NEW_SIT_LIST
+BASE_SIT_LIST="${5}"
+echo 'File containing the list of situations to be modelled:'
+echo $BASE_SIT_LIST
+
+##### Login to tacmd console ##############################################################################################################################
+
+/opt/IBM/ITM/bin/tacmd login -s "${TEMS_NAME}" -u "${USER_ID}" -p "${PASSWORD}"
+
+##### If servername provided is not a valid primary HUB, script will not be executed further ###########################################################################
+
+if [[ "${?}" -ne 0 ]]
+then
+        exit 1
+fi
+
+##### Code Block for situation creation ####################################################################################################################
+
+var=0
+for i in `cat $NEW_SIT_LIST`
+do
+if [ -z "$i" ]
+then
+echo "i is empty"
+else
+var=$(( $var + 1 ))
+fi
+j=`cat $BASE_SIT_LIST | head -$var | tail -1`
+echo "/opt/IBM/ITM/bin/tacmd createsit -s $i -b $j"
+/opt/IBM/ITM/bin/tacmd createsit -s $i -b $j
+
+##### If situation name provided for creation is already available, then script will not be executed further ###########################################################
+
+if [[ "${?}" -ne 0 ]]
+then
+        exit 1
+fi
+
+##### Unassign the MSL which was available when situation was created and display the details for after editing thee situation #########################################
+
+/opt/IBM/ITM/bin/tacmd editsit -s $i -p Distribution='' -f
+MSL=`/opt/IBM/ITM/bin/tacmd viewsit -s $i | grep -i "Distribution"`
+echo $j: $MSL
+done
+
+##### End of Script #################################################################################################################################
+
+Usage:
+
+		a. Copy the script on a server where you can connect to tacmd and give full permissions to the script file.
+		b. Create 2 files containing the list of situation which has to be created and which has to be modelled.
+		c. Run the script.
+
+		Example
+		Create the files with sitautions (Always use situation full names)
+		cat TE.list
+		ABE_STD_UXAX_CP_TE_GT95_C
+		cat PR.list
+		ABE_STD_UXAX_CP_PR_GT95_C
+		
+	
+		./createsit.sh ubd1rfissmctm01 sysadmin sysadmin TE.list PR.list
+		Logged into server:
+		ubd1rfissmctm01
+		Logged as:
+		sysadmin
+		Credentials used:
+		sysadmin
+		File containing the list of new situations to be created:
+		TE.list
+		File containing the list of situations to be modelled:
+		PR.list
+		
+		Validating user...
+		
+		KUIC00007I: User sysadmin logged into server on https://ubd1rfissmctm01:3661.
+		/opt/IBM/ITM/bin/tacmd createsit -s ABE_STD_UXAX_CP_TE_GT95_C -b ABE_STD_UXAX_CP_PR_GT95_C
+		
+		KUICCS005I: The situation ABE_STD_UXAX_CP_TE_GT95_C was created on the server on https://ubd1rfissmctm01:3661.
+		
+		KUICES005I: The situation ABE_STD_UXAX_CP_TE_GT95_C was updated on server https://ubd1rfissmctm01:3661 .
+		ABE_STD_UXAX_CP_PR_GT95_C: Distribution :
+		
+		If you are not specifying the complete arguments with script, the script will terminate with the message as below:
+		
+		./createsit.sh ubd1rfissmctm01 sysadmin sysadmin
+		Run the script by passing the below mentioned arguments in the same order:
+		TEMS_NAME --> Specify the Active HTEMS hostname or IP
+		USER_ID --> Enter a valid User ID
+		PASSWORD --> Enter the credentials
+		NEW_SIT_LIST --> Define a file containing the list of new situations you want to create.
+		BASE_SIT_LIST --> Define a file containing the list of base situations you will use to create the new situation.
+		
+		If you do not specify the primary HUB server while running the script, it will terminate with the message below:
+		
+		./createsit.sh ubd1rfissmctm02 sysadmin sysadmin TE.list PR.list
+		Logged into server:
+		ubd1rfissmctm02
+		Logged as:
+		sysadmin
+		Credentials used:
+		sysadmin
+		File containing the list of new situations to be created:
+		TE.list
+		File containing the list of situations to be modelled:
+		PR.list
+		
+		Validating user...
+		
+		KUIC00017E: tacmd is not allowed to connect to a secondary Hub
+		
+		A secondary HUB has been specified instead of the primary Hub
+		
+		Please, retry with the primary Hub
+		
+		
+		If the situation mentioned for creation is already available then script will be terminated with the message as below:
+		
+		./createsit.sh ubd1rfissmctm01 sysadmin sysadmin TE.list PR.list
+		Logged into server:
+		ubd1rfissmctm01
+		Logged as:
+		sysadmin
+		Credentials used:
+		sysadmin
+		File containing the list of new situations to be created:
+		TE.list
+		File containing the list of situations to be modelled:
+		PR.list
+		
+		Validating user...
+		
+		KUIC00007I: User sysadmin logged into server on https://ubd1rfissmctm01:3661.
+		/opt/IBM/ITM/bin/tacmd createsit -s ABE_STD_UXAX_CP_TE_GT95_C -b ABE_STD_UXAX_CP_PR_GT95_C
+		
+		KUICCS004E: The situation was not created because ABE_STD_UXAX_CP_TE_GT95_C already exists on the server https://ubd1rfissmctm01:3661.
+		
+		You specified the name of an already existing situation. The new situation name must be unique on the server.
+		
+		Specify a new situation name that does not already exists on the specified server and try creating the new situation again.
