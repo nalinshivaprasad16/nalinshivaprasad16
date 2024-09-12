@@ -1,0 +1,171 @@
+
+This documentation will highlight the installation and basic format and config file information.
+For more information consult the KLO documentation at the following link: 
+http://pic.dhe.ibm.com/infocenter/tivihelp/v61r1/topic/com.ibm.itm.doc_6.3/logfile/logfileagent_user.htm
+Best Practices guide:
+https://www.ibm.com/developerworks/community/blogs/cdd16df5-7bb8-4ef1-bcb9-cefb1dd40581/entry/best_practices_to_define_format_file_for_log_file_agent57?lang=en
+Agent Installation
+Installation of the Log File Agent should be done from the HUB monitoring server instead of using the TEPS console.  Using the file transfer (putfile) utility included with tacmd, installing the KLO and transferring the files will be easier.
+The basic setup of the Log File Agent at FIS include both AppLog (Windows and *NIX) and SysLog (*NIX only).  When installing or updating SysLog monitoring on *NIX Operating Systems, use this only to monitor System Logs.  Application Log monitoring should be for any other monitoring on the system outside of SysLog.
+The Log File Agent uses instances, like many other SCAPM agents.  Once the AppLog (or SysLog) Instance is deployed, additional profiles are added by just copying out new format and config files which will be discussed later.
+Before deploying an AppLog or SysLog Instance, check to make sure that there is not already an Instance deployed.  This can be done by checking with listsystems to verify if the agent is installed.  For the purpose of this document, I will be using bdc1rfissmcdb01 as an example.  Note: You must be logged into the TEMS in order to run any of the commands in this guide.
+The following is how to install the AppLog instance on *NIX:
+
+
+Note:  These are one line commands that  need to be run from the command line, each command is only one line.  The commands are shown separated below to show the different configuration values.
+tacmd addsystem -t lo -n bdc1rfissmcpo01:LZ -p INSTANCE=AppLog LOG_FILE_ADAPTER_CONFIGURATION.KLO_SEND_EIF_EVENTS=No LOG_FILE_ADAPTER_CONFIGURATION.KLO_SEND_ITM_EVENTS=Yes LOG_FILE_ADAPTER_CONFIGURATION.KLO_AUTO_INIT_SYSLOG=No LOG_FILE_ADAPTER_GLOBAL_SETTINGS.KLO_PROCESS_MAX_CPU_PCT=100 LOG_FILE_ADAPTER_GLOBAL_SETTINGS.KLO_FILE_DISCOVERY_DIR=/opt/IBM/ITM/FIS/KLO/AppLog
+The following is how to install the AppLog instance on Windows:
+tacmd addsystem -t lo -n Primary:BDC1WCMCP3MAP08:NT -p INSTANCE=AppLog LOG_FILE_ADAPTER_CONFIGURATION.KLO_SEND_EIF_EVENTS=No LOG_FILE_ADAPTER_CONFIGURATION.KLO_SEND_ITM_EVENTS=Yes LOG_FILE_ADAPTER_CONFIGURATION.KLO_AUTO_INIT_SYSLOG=No LOG_FILE_ADAPTER_GLOBAL_SETTINGS.KLO_PROCESS_MAX_CPU_PCT=25 LOG_FILE_ADAPTER_GLOBAL_SETTINGS.KLO_FILE_DISCOVERY_DIR=C:\\IBM\\ITM\\FIS\\KLO\\AppLog
+To deploy the SysLog instances, the following changes need to be made.  This is only for *NIX based systems, Windows uses the EventLog for syslog monitoring.
+INSTANCE=SysLog
+KLO_FILE_DISCOVERY_DIR=/opt/IBM/ITM/FIS/KLO/SysLog
+Once the agent installation has been deployed, verify through tacmd getdeploystatus and wait until the agent comes back as SUCCESS
+ 
+
+                                     
+Format and Configuration Files
+Once an agent is deployed, the instances are created, either AppLog or SysLog.  The Format and Configuration files define profiles that run under each of the Instances.  The KLO_FILE_DISCOVERY_DIR define a directory where .fmt and .conf files can be placed and automatically picked up by the KLO (/opt/IBM/ITM/FIS/KLO/AppLog (or SysLog) on *NIX and  C:\IBM\ITM\FIS\KLO\AppLog on Windows).  The .fmt and .conf files need to be named the same in order for the KLO to be picked up, AppLog1.fmt/AppLog1.conf, AppLog2.fmt/AppLog2.conf, etc.)  Once the .fmt and .conf files are picked up by the agent, situations can be created to alert.
+
+There is a nfs resource repository of KLO .fmt and .conf files in /apps1/KLO_distributions/<environment>/<customer>/<servername>.  This makes tracking what profiles have been distributed to each server.  Both AppLog and SysLog profiles should increment based on what the last profiles were distributed.  If AppLog1 and AppLog2 have been distributed, create AppLog3, AppLog4, etc.  There are also some example .fmt and .conf files in /apps1/KLO_distributions/examples.
+ 
+Once a .fmt and .conf file have been created, they can be sent to the server using tacmd putfile.  The .fmt and .conf files should be put into the correct directory, based on OS.  AppLog  and SysLog files should be sent to the directories defined above in KLO_FILE_DISCOVERY_DIR.
+ 
+There is a base.conf file that is located in the KLO_distributions/examples directory that should be used as a base unless certain changes need to be made based on the logfile that is being monitored.  For most cases the base.conf should be used, mainly preserving ProcessPriorityClass=B, LognameIsBaseName=n and FileComparisonMode=CompareByLastUpdate.  All of these values are fully described in the KLO documentation.  The LogSources setting defines what logfile names are being monitored, if there are multiple logfiles then they can be input separated by commas.
+ 
+For example:
+LogSources=/pathtologfile/logfile1.log,/pathtologfile/logfile2.log
+ 
+The .fmt and .conf files work together to decide what strings need to be extracted from the logfile.  If there are multiple types of logfiles and multiple string searches, they should be different profiles.  This keeps the logfile agent searching for strings only needed in a particular logfile and not searching through a logfile where it is not valid.  In addition, values could be positive in a logfile that may not be wanted.
+ 
+Format file construction uses regular expressions to create searches within the logfile.  Each search string should try to keep the search down to the minimum number of checks per string to keep the CPU utilization at a minimum.  There are also DISCARD statements that should e used when they can to keep the CPU utilization low also.  This is fully documented in the KLO IBM documentation.
+ 
+Once the .fmt and .conf file have been sent to the server, the profile should show up within a few minutes in the TEPS console.  Situations are created off of the Profile of the Instance that was distrubited.  For example, the situation should be created on AppLog1, Applog2, etc instead of the Instance of AppLog.
+
+
+
+Standard/Generic case:
+
+Format file -
+
+REGEX CRITICAL
+(.*Could not add transaction to Tuxedo queue.*)
+msg $1
+END
+
+Config File-
+
+LogSources=var/log/ondot/component/fiserver1.log
+LognameIsBasename=n
+FileComparisonMode=CompareByLastUpdate
+BufferEvents=NO
+PollInterval=60
+NumEventsToCatchup=0
+DupDetectionKeyAttributes=msg
+EventSummaryInterval=600
+EventFloodThreshold=send_all
+ProcessPriorityClass=B
+SubnodeDescription=JDBCConnectionExc
+
+
+Using regular expression to capture log files being monitored 
+
+RegexLogSources=/cortex/dbd/tmp/Auths-3secsOverResponse-.*
+LognameIsBasename=n
+FileComparisonMode=CompareByLastUpdate
+BufferEvents=NO
+PollInterval=30
+NumEventsToCatchup=0
+DupDetectionKeyAttributes=msg,CustomSlot1
+EventSummaryInterval=600
+EventFloodThreshold=5
+ProcessPriorityClass=B
+SubnodeDescription=Cortex_TUXIF
+
+
+Using Keywords defined in Regular expression of format file:
+
+REGEX CSFException
+^(.*EXCEPTION.*)$
+-CSFerror $1 CustomSlot5
+hostname DEFAULT CustomSlot1
+-file FILENAME CustomSlot6
+msg PRINTF("CSF AppLog detcted an Exception: %s", CSFerror)
+END
+
+Custom slot mappings in regular expression:
+
+REGEX DPP_WS_Malfunction
+^([0-9]{4}-[0-9]{2}-[0-9]{2}) ([0-9]{2}:[0-9]{2}:[0-9]{2}),(.*?),(.*?),(.*?),909,([0-9]*)$
+Date     $1    CustomSlot1
+Time     $2    CustomSlot2
+Host     $3    CustomSlot3
+Service  $4   CustomSlot4
+Client   $5    CustomSlot5
+Errors   $6    CustomInteger1 
+msg PRINTF("DPP Web-Services - System Malfunction detected for %s in service %s on host %s (occurrences: %s, code: 909)", Client, Service, Host, Errors)
+END
+
+Log Sample:
+2018-08-15 03:00:00,ukbiprdjblx04,RAP-WS-2_46_0,GRG,909,26
+2018-08-15 03:00:00,ukbiprdjblx04,RAP-WS-2_46_0,GRG,909,26
+2018-08-15 03:00:00,ukbiprdjblx04,RAP-WS-2_46_0,GRG,909,26
+2018-08-15 03:00:00,ukbiprdjblx04,RAP-WS-2_46_0,GRG,909,26
+2018-08-15 03:00:00,ukbiprdjblx04,RAP-WS-2_46_0,GRG,909,26
+
+  Opmon_RED
+^<FONT COLOR=GREEN> ([0-9]{2}\/[0-9]{2}\/[0-9]{2}) ([0-9]{2}:[0-9]{2}) (<\/FONT><FONT COLOR=.*?>) (.*) (<\/FONT><FONT COLOR=RED>.*?<\/FONT><BR>)$
+Date     $1    CustomSlot1
+Time     $2    CustomSlot2
+LABEL1     $3    CustomSlot3
+hostname  $4    CustomSlot4
+Error  $5    CustomSlot5
+msg PRINTF("%s detected on server %s at %s %s hrs.", Error, hostname, Date, Time)
+END
+REGEX *DISCARD*// Using Keyword Discard to drop the match found
+^(.*Card Factory Settlement Report  - Another instance is already running. Exiting.*)$
+END
+REGEX *DISCARD*// Using Keyword Discard to drop the match found
+^(.*\[loadarvl] sendAckReceipts - No unsent receipts found in \/auths\/loadarvl\/archive.*)$
+END
+
+
+Log Sample:
+
+<FONT COLOR=GREEN> 05/05/20 07:54 </FONT><FONT COLOR=white> ulw1ampscafap01 </FONT><FONT COLOR=RED> /auths/creatSet/scripts/check_generic_reconciliation.ksh - Lock file exists, script already running or remove lock file /auths/creatSet/scripts/CHECK_REC.LCK to re-run.</FONT><BR>
+<FONT COLOR=GREEN> 05/05/20 07:54 </FONT><FONT COLOR=white> ulw1ampscafap01 </FONT><FONT COLOR=RED> /home/reports/scripts/check_2nd_stage_reconciliation.ksh - There seems to be a problem with the 2nd stage reconciler, Contact EPOS support.</FONT><BR>
+<FONT COLOR=GREEN> 05/05/20 07:54 </FONT><FONT COLOR=white> ulw1ampscafap01 </FONT><FONT COLOR=RED> /home/reports/scripts/check_generic_reconciliation.ksh - There seems to be a problem with the generic reconciler, Contact EPOS support.</FONT><BR>
+<FONT COLOR=GREEN> 05/05/20 07:54 </FONT><FONT COLOR=white> ulw1ampscafap01 </FONT><FONT COLOR=RED> /auths/creatSet/scripts/check_generic_reconciliation.ksh - There seem to be a problem with SettRecGeneric, Contact EPOS support.</FONT><BR>
+
+Using Inheritance concept
+REGEX DiskFailure 
+Disk Failure on device (.*)
+device $1 CustomSlot1 
+END
+Suppose error to be monitored is as below
+
+Disk Failure on device /dev/sd0, error code: 13 error message.
+
+REGEX DiskFailureError FOLLOWS DiskFailure //Follows is the Key word used
+Disk Failure on device (.*), error code: ([0-9]*)
+errcode $2 CustomSlot2
+END
+
+Using Multiline functionality
+Log errors:
+Line1: An error occurred
+Line2: The error was "disk error"copy to clipboard
+
+REGEX REMultiLine 
+Line1:(.*)\nLine2(.*)  
+msg $1
+second_msg $2
+END
+Note:   \n newline character as part of the regular expression to indicate where the line breaks occur in the monitoring log. 
+On Windows, you specify a \r\n carriage-return and newline combination
+
+
+
+
+
+KLO Remote Deployment:
+/opt/IBM/ITM/bin/tacmd executecommand -m pdc2ramxpfdbs01:LZ -c "/opt/IBM/ITM/bin/cinfo -r " -o -v -l -e -r
