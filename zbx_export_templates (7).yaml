@@ -1,0 +1,270 @@
+zabbix_export:
+  version: '6.0'
+  date: '2025-11-18T05:08:06Z'
+  groups:
+    - uuid: ed1cc357a4ab43bfb4403ab8711fe334
+      name: Templates/FIS/Linux/Override
+    - uuid: e725de7cfa284729aa7a3b1b748cc887
+      name: Templates/FIS/US
+  templates:
+    - uuid: 384385b8e3b04ea4b321a91cae91f995
+      template: 'FIS-LOB-Linux Syslog - Per-Pattern'
+      name: 'FIS-LOB-Linux Syslog - Per-Pattern'
+      description: |
+        Per-pattern syslog monitoring for Linux.
+        - One active log item per file.
+        - Regex preprocessing extracts the matched token (pattern) as the item value.
+        - Triggers are nested per item (compat with your prior export format).
+      groups:
+        - name: Templates/FIS/Linux/Override
+        - name: Templates/FIS/US
+      items:
+        - uuid: 894e8ef8079f4997ac831cadc0db04e5
+          name: 'syslog kern.log'
+          type: ZABBIX_ACTIVE
+          key: 'log[/var/log/kern.log,"(docker0|duplicate IP|kernel: crit|interface with a down link|blk_update_request|boks_sshd|goferd)",,10,skip]'
+          delay: 30s
+          history: 7d
+          trends: '0'
+          value_type: LOG
+          description: 'Monitors /var/log/kern.log and extracts the matched token.'
+          tags:
+            - tag: displayitem
+              value: syslog
+          triggers:
+            - uuid: a11628331b214aeea8805c04faed2e8c
+              expression: 'last(/FIS-LOB-Linux Syslog - Per-Pattern/log[/var/log/kern.log,"(docker0|duplicate IP|kernel: crit|interface with a down link|blk_update_request|boks_sshd|goferd)",,10,skip])="blk_update_request"'
+              name: 'Syslog (kern.log) on {HOST.NAME}: "blk_update_request"'
+              event_name: 'Syslog match on {HOST.NAME} (kern.log): pattern="blk_update_request"'
+              opdata: 'File=/var/log/kern.log | Pattern=blk_update_request | Key={ITEM.KEY1}'
+              priority: WARNING
+              manual_close: 'YES'
+              tags:
+                - tag: file
+                  value: kern.log
+                - tag: pattern
+                  value: blk_update_request
+                - tag: PURE
+                  value: 'Y'
+                - tag: source
+                  value: syslog
+            - uuid: 87450cdc7ade44a7b6e6c22ba7b3fb42
+              expression: 'last(/FIS-LOB-Linux Syslog - Per-Pattern/log[/var/log/kern.log,"(docker0|duplicate IP|kernel: crit|interface with a down link|blk_update_request|boks_sshd|goferd)",,10,skip])="boks_sshd"'
+              name: 'Syslog (kern.log) on {HOST.NAME}: "boks_sshd"'
+              event_name: 'Syslog match on {HOST.NAME} (kern.log): pattern="boks_sshd"'
+              opdata: 'File=/var/log/kern.log | Pattern=boks_sshd | Key={ITEM.KEY1}'
+              priority: WARNING
+              manual_close: 'YES'
+              tags:
+                - tag: file
+                  value: kern.log
+                - tag: pattern
+                  value: boks_sshd
+                - tag: PURE
+                  value: 'Y'
+                - tag: source
+                  value: syslog
+            - uuid: 7d940c5b73bd4ab194c518960739df18
+              expression: 'last(/FIS-LOB-Linux Syslog - Per-Pattern/log[/var/log/kern.log,"(docker0|duplicate IP|kernel: crit|interface with a down link|blk_update_request|boks_sshd|goferd)",,10,skip])="docker"'
+              name: 'Syslog (kern.log) on {HOST.NAME}: "docker"'
+              event_name: 'Syslog match on {HOST.NAME} (kern.log): pattern="docker"'
+              opdata: 'File=/var/log/kern.log | Pattern=docker | Key={ITEM.KEY1}'
+              manual_close: 'YES'
+              tags:
+                - tag: file
+                  value: kern.log
+                - tag: pattern
+                  value: docker
+                - tag: PURE
+                  value: 'Y'
+                - tag: source
+                  value: syslog
+            - uuid: edfc641013024bb48df4f7167942c835
+              expression: 'last(/FIS-LOB-Linux Syslog - Per-Pattern/log[/var/log/kern.log,"(docker0|duplicate IP|kernel: crit|interface with a down link|blk_update_request|boks_sshd|goferd)",,10,skip])="duplicate IP"'
+              name: 'Syslog (kern.log) on {HOST.NAME}: "duplicate IP"'
+              event_name: 'Syslog match on {HOST.NAME} (kern.log): pattern="duplicate IP"'
+              opdata: 'File=/var/log/kern.log | Pattern=duplicate IP | Key={ITEM.KEY1}'
+              priority: AVERAGE
+              manual_close: 'YES'
+              tags:
+                - tag: file
+                  value: kern.log
+                - tag: pattern
+                  value: 'duplicate IP'
+                - tag: PURE
+                  value: 'Y'
+                - tag: source
+                  value: syslog
+            - uuid: ff88806eb6f34a54b0963f215591f8ef
+              expression: 'last(/FIS-LOB-Linux Syslog - Per-Pattern/log[/var/log/kern.log,"(docker0|duplicate IP|kernel: crit|interface with a down link|blk_update_request|boks_sshd|goferd)",,10,skip])="goferd"'
+              name: 'Syslog (kern.log) on {HOST.NAME}: "goferd"'
+              event_name: 'Syslog match on {HOST.NAME} (kern.log): pattern="goferd"'
+              opdata: 'File=/var/log/kern.log | Pattern=goferd | Key={ITEM.KEY1}'
+              priority: WARNING
+              manual_close: 'YES'
+              tags:
+                - tag: file
+                  value: kern.log
+                - tag: pattern
+                  value: goferd
+                - tag: PURE
+                  value: 'Y'
+                - tag: source
+                  value: syslog
+            - uuid: b1fec09bc40341668686ac1e6d0298b9
+              expression: 'last(/FIS-LOB-Linux Syslog - Per-Pattern/log[/var/log/kern.log,"(docker0|duplicate IP|kernel: crit|interface with a down link|blk_update_request|boks_sshd|goferd)",,10,skip])="interface with a down link"'
+              name: 'Syslog (kern.log) on {HOST.NAME}: "interface with a down link"'
+              event_name: 'Syslog match on {HOST.NAME} (kern.log): pattern="interface with a down link"'
+              opdata: 'File=/var/log/kern.log | Pattern=interface with a down link | Key={ITEM.KEY1}'
+              priority: AVERAGE
+              manual_close: 'YES'
+              tags:
+                - tag: file
+                  value: kern.log
+                - tag: pattern
+                  value: 'interface with a down link'
+                - tag: PURE
+                  value: 'Y'
+                - tag: source
+                  value: syslog
+            - uuid: 52e7c0b83b564b53a107ea465c93c429
+              expression: 'last(/FIS-LOB-Linux Syslog - Per-Pattern/log[/var/log/kern.log,"(docker0|duplicate IP|kernel: crit|interface with a down link|blk_update_request|boks_sshd|goferd)",,10,skip])="kernel: crit"'
+              name: 'Syslog (kern.log) on {HOST.NAME}: "kernel: crit"'
+              event_name: 'Syslog match on {HOST.NAME} (kern.log): pattern="kernel: crit"'
+              opdata: 'File=/var/log/kern.log | Pattern=kernel: crit | Key={ITEM.KEY1}'
+              priority: HIGH
+              manual_close: 'YES'
+              tags:
+                - tag: file
+                  value: kern.log
+                - tag: pattern
+                  value: 'kernel: crit'
+                - tag: PURE
+                  value: 'Y'
+                - tag: source
+                  value: syslog
+        - uuid: 1b9771949e36488ab8f7fc4419e70f83
+          name: 'syslog messages'
+          type: ZABBIX_ACTIVE
+          key: 'log[/var/log/messages,"(docker|duplicate IP|kernel: crit|interface with a down link|blk_update_request|boks_sshd|goferd)",,10,skip]'
+          delay: 30s
+          history: 7d
+          trends: '0'
+          value_type: LOG
+          description: 'Monitors /var/log/messages and extracts the matched token.'
+          tags:
+            - tag: displayitem
+              value: syslog
+          triggers:
+            - uuid: b04d88162b5c4c749e223394bb83ca39
+              expression: 'last(/FIS-LOB-Linux Syslog - Per-Pattern/log[/var/log/messages,"(docker|duplicate IP|kernel: crit|interface with a down link|blk_update_request|boks_sshd|goferd)",,10,skip])="blk_update_request"'
+              name: 'Syslog (messages) on {HOST.NAME}: "blk_update_request"'
+              event_name: 'Syslog match on {HOST.NAME} (messages): pattern="blk_update_request"'
+              opdata: 'File=/var/log/messages | Pattern=blk_update_request | Key={ITEM.KEY1}'
+              priority: WARNING
+              manual_close: 'YES'
+              tags:
+                - tag: file
+                  value: messages
+                - tag: pattern
+                  value: blk_update_request
+                - tag: PURE
+                  value: 'Y'
+                - tag: source
+                  value: syslog
+            - uuid: 693a0ac4e4be483cbbe69d79479b1e86
+              expression: 'last(/FIS-LOB-Linux Syslog - Per-Pattern/log[/var/log/messages,"(docker|duplicate IP|kernel: crit|interface with a down link|blk_update_request|boks_sshd|goferd)",,10,skip])="boks_sshd"'
+              name: 'Syslog (messages) on {HOST.NAME}: "boks_sshd"'
+              event_name: 'Syslog match on {HOST.NAME} (messages): pattern="boks_sshd"'
+              opdata: 'File=/var/log/messages | Pattern=boks_sshd | Key={ITEM.KEY1}'
+              priority: WARNING
+              manual_close: 'YES'
+              tags:
+                - tag: file
+                  value: messages
+                - tag: pattern
+                  value: boks_sshd
+                - tag: PURE
+                  value: 'Y'
+                - tag: source
+                  value: syslog
+            - uuid: f87ab97042044224a572a9a52b2f2b21
+              expression: 'last(/FIS-LOB-Linux Syslog - Per-Pattern/log[/var/log/messages,"(docker|duplicate IP|kernel: crit|interface with a down link|blk_update_request|boks_sshd|goferd)",,10,skip])="docker"'
+              name: 'Syslog (messages) on {HOST.NAME}: "docker"'
+              event_name: 'Syslog match on {HOST.NAME} (messages): pattern="docker"'
+              opdata: 'File=/var/log/messages | Pattern=docker | Key={ITEM.KEY1}'
+              priority: WARNING
+              manual_close: 'YES'
+              tags:
+                - tag: file
+                  value: messages
+                - tag: pattern
+                  value: docker
+                - tag: PURE
+                  value: 'Y'
+                - tag: source
+                  value: syslog
+            - uuid: 267782528f504a9aa1b9ef8b5ddfb8b1
+              expression: 'last(/FIS-LOB-Linux Syslog - Per-Pattern/log[/var/log/messages,"(docker|duplicate IP|kernel: crit|interface with a down link|blk_update_request|boks_sshd|goferd)",,10,skip])="duplicate IP"'
+              name: 'Syslog (messages) on {HOST.NAME}: "duplicate IP"'
+              event_name: 'Syslog match on {HOST.NAME} (messages): pattern="duplicate IP"'
+              opdata: 'File=/var/log/messages | Pattern=duplicate IP | Key={ITEM.KEY1}'
+              priority: AVERAGE
+              manual_close: 'YES'
+              tags:
+                - tag: file
+                  value: messages
+                - tag: pattern
+                  value: 'duplicate IP'
+                - tag: PURE
+                  value: 'Y'
+                - tag: source
+                  value: syslog
+            - uuid: 4ea1423ffeee4966aee07acbe096e3c3
+              expression: 'last(/FIS-LOB-Linux Syslog - Per-Pattern/log[/var/log/messages,"(docker|duplicate IP|kernel: crit|interface with a down link|blk_update_request|boks_sshd|goferd)",,10,skip])="goferd"'
+              name: 'Syslog (messages) on {HOST.NAME}: "goferd"'
+              event_name: 'Syslog match on {HOST.NAME} (messages): pattern="goferd"'
+              opdata: 'File=/var/log/messages | Pattern=goferd | Key={ITEM.KEY1}'
+              priority: WARNING
+              manual_close: 'YES'
+              tags:
+                - tag: file
+                  value: messages
+                - tag: pattern
+                  value: goferd
+                - tag: PURE
+                  value: 'Y'
+                - tag: source
+                  value: syslog
+            - uuid: 3db0e9d283f443d0b060ba760a8363e1
+              expression: 'last(/FIS-LOB-Linux Syslog - Per-Pattern/log[/var/log/messages,"(docker|duplicate IP|kernel: crit|interface with a down link|blk_update_request|boks_sshd|goferd)",,10,skip])="interface with a down link"'
+              name: 'Syslog (messages) on {HOST.NAME}: "interface with a down link"'
+              event_name: 'Syslog match on {HOST.NAME} (messages): pattern="interface with a down link"'
+              opdata: 'File=/var/log/messages | Pattern=interface with a down link | Key={ITEM.KEY1}'
+              priority: AVERAGE
+              manual_close: 'YES'
+              tags:
+                - tag: file
+                  value: messages
+                - tag: pattern
+                  value: 'interface with a down link'
+                - tag: PURE
+                  value: 'Y'
+                - tag: source
+                  value: syslog
+            - uuid: 842db3c09c014d3c80ed365e9d174e3e
+              expression: 'last(/FIS-LOB-Linux Syslog - Per-Pattern/log[/var/log/messages,"(docker|duplicate IP|kernel: crit|interface with a down link|blk_update_request|boks_sshd|goferd)",,10,skip])="kernel: crit"'
+              name: 'Syslog (messages) on {HOST.NAME}: "kernel: crit"'
+              event_name: 'Syslog match on {HOST.NAME} (messages): pattern="kernel: crit"'
+              opdata: 'File=/var/log/messages | Pattern=kernel: crit | Key={ITEM.KEY1}'
+              priority: HIGH
+              manual_close: 'YES'
+              tags:
+                - tag: file
+                  value: messages
+                - tag: pattern
+                  value: 'kernel: crit'
+                - tag: PURE
+                  value: 'Y'
+                - tag: source
+                  value: syslog
