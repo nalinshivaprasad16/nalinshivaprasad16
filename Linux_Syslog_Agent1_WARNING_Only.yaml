@@ -1,0 +1,64 @@
+zabbix_export:
+  version: '6.4'
+  date: '2026-01-09T14:00:00Z'
+
+  groups:
+    - name: Templates/Operating Systems
+
+  templates:
+    - template: 'Linux Syslog – Agent1 WARNING Only'
+      name: 'Linux Syslog – Agent1 WARNING Only'
+      description: |
+        Best-practice Linux syslog monitoring template using Zabbix Agent (Agent1).
+        Uses logrt[] and raises a single WARNING severity alert for important syslog events.
+
+      groups:
+        - name: Templates/Operating Systems
+
+      macros:
+        - macro: '{$SYSLOG.FILE}'
+          value: '/var/log/messages'
+        - macro: '{$SYSLOG.ROTATE}'
+          value: 'skip'
+
+      items:
+        - name: 'Syslog – Important warnings (kernel, disk, auth, memory, services)'
+          type: ZABBIX_AGENT
+          key: >
+            logrt[{$SYSLOG.FILE},
+            "(CRITICAL|PANIC|EMERG|
+              kernel:.*(error|panic|BUG)|
+              I/O error|EXT4-fs error|XFS.*ERROR|Buffer I/O error|
+              Out of memory|oom-killer|
+              Failed password|authentication failure|Invalid user|
+              sudo:.*authentication failure|
+              segfault|core dumped|failed with result|Main process exited)",
+            ,,,{$SYSLOG.ROTATE}]
+          delay: 30s
+          history: 7d
+          trends: '0'
+          value_type: LOG
+          description: 'Consolidated syslog monitoring for major system issues'
+          tags:
+            - tag: component
+              value: syslog
+            - tag: severity
+              value: warning
+
+      triggers:
+        - name: 'WARNING: Important syslog message detected'
+          expression: >
+            last(/Linux Syslog – Agent1 WARNING Only/
+            logrt[{$SYSLOG.FILE},
+            "(CRITICAL|PANIC|EMERG|
+              kernel:.*(error|panic|BUG)|
+              I/O error|EXT4-fs error|XFS.*ERROR|Buffer I/O error|
+              Out of memory|oom-killer|
+              Failed password|authentication failure|Invalid user|
+              sudo:.*authentication failure|
+              segfault|core dumped|failed with result|Main process exited)",
+            ,,,{$SYSLOG.ROTATE}])<>""
+          priority: WARNING
+          description: |
+            One consolidated WARNING alert for important Linux syslog events.
+            Designed to avoid alert fatigue while still catching real issues.
