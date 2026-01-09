@@ -1,0 +1,943 @@
+zabbix_export:
+  version: '6.0'
+  date: '2026-01-09T11:19:30Z'
+  groups:
+    - uuid: 092f8804962b4605aa706ee118e996d0
+      name: Templates/FIS/Linux/Override
+    - uuid: 98545fba767946128b8e5bd0a3707343
+      name: Templates/FIS/US
+  templates:
+    - uuid: ac92ae9110264d068fec47d0b98fe4b6
+      template: FIS-Global-Linux_STD_Syslog_BP
+      name: 'FIS-Global-Linux STD Syslog (Best Practice)'
+      description: |
+        Dependent items pack for syslog monitoring (base + extra patterns).
+        Import AFTER base-min sanitized template (masters only). No triggers in this file.
+      groups:
+        - name: Templates/FIS/Linux/Override
+        - name: Templates/FIS/US
+      items:
+        - uuid: 371efe5995574d71a6e546248736d21b
+          name: 'Kernel: blk update request'
+          type: DEPENDENT
+          key: log.kern.blk_update_request
+          delay: '0'
+          trends: '0'
+          value_type: LOG
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - '.*(?i:blk_update_request).*'
+                - \0
+          master_item:
+            key: 'logrt[/var/log/kern.log,".*",,100,skip]'
+          tags:
+            - tag: component
+              value: syslog
+            - tag: displayitem
+              value: blk_update_request
+            - tag: monclass
+              value: STD
+            - tag: monname
+              value: SysLog
+        - uuid: dc8bbd3dccb946ada25a3d87e5ee2048
+          name: 'Kernel: boks sshd'
+          type: DEPENDENT
+          key: log.kern.boks_sshd
+          delay: '0'
+          trends: '0'
+          value_type: LOG
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - '.*(?i:boks_sshd).*'
+                - \0
+          master_item:
+            key: 'logrt[/var/log/kern.log,".*",,100,skip]'
+          tags:
+            - tag: component
+              value: syslog
+            - tag: displayitem
+              value: boks_sshd
+            - tag: monclass
+              value: STD
+            - tag: monname
+              value: SysLog
+        - uuid: ebe3068c69e94aa29d9c4cc23af55267
+          name: 'Kernel: docker'
+          type: DEPENDENT
+          key: log.kern.docker
+          delay: '0'
+          trends: '0'
+          value_type: LOG
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - '.*(?i:docker).*'
+                - \0
+          master_item:
+            key: 'logrt[/var/log/kern.log,".*",,100,skip]'
+          tags:
+            - tag: component
+              value: syslog
+            - tag: displayitem
+              value: docker
+            - tag: monclass
+              value: STD
+            - tag: monname
+              value: SysLog
+        - uuid: d1dc06486e8c4f78b16b19b909e6a517
+          name: 'Kernel: duplicate ip'
+          type: DEPENDENT
+          key: log.kern.duplicate_ip
+          delay: '0'
+          trends: '0'
+          value_type: LOG
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - '.*(?i:duplicate\s+ip).*'
+                - \0
+          master_item:
+            key: 'logrt[/var/log/kern.log,".*",,100,skip]'
+          tags:
+            - tag: component
+              value: syslog
+            - tag: displayitem
+              value: duplicate_ip
+            - tag: monclass
+              value: STD
+            - tag: monname
+              value: SysLog
+        - uuid: 199b0d264cff40fe94e56616d3df5c0f
+          name: 'Kernel: ext4 error'
+          type: DEPENDENT
+          key: log.kern.ext4_error
+          delay: '0'
+          trends: '0'
+          value_type: LOG
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - '.*(?i:(EXT4-fs error|ext4.*error)).*'
+                - \0
+          master_item:
+            key: 'logrt[/var/log/kern.log,".*",,100,skip]'
+          tags:
+            - tag: component
+              value: syslog
+            - tag: displayitem
+              value: ext4_error
+            - tag: monclass
+              value: STD
+            - tag: monname
+              value: SysLog
+        - uuid: a56bf4fd28b547d6a51f283c3645ec8e
+          name: 'Kernel: goferd'
+          type: DEPENDENT
+          key: log.kern.goferd
+          delay: '0'
+          trends: '0'
+          value_type: LOG
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - '.*(?i:goferd).*'
+                - \0
+          master_item:
+            key: 'logrt[/var/log/kern.log,".*",,100,skip]'
+          tags:
+            - tag: component
+              value: syslog
+            - tag: displayitem
+              value: goferd
+            - tag: monclass
+              value: STD
+            - tag: monname
+              value: SysLog
+        - uuid: 177ba122259c4745983a0529bf943f49
+          name: 'Kernel: interface down link'
+          type: DEPENDENT
+          key: log.kern.interface_down_link
+          delay: '0'
+          trends: '0'
+          value_type: LOG
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - '.*(?i:interface\s+with\s+a\s+down\s+link).*'
+                - \0
+          master_item:
+            key: 'logrt[/var/log/kern.log,".*",,100,skip]'
+          tags:
+            - tag: component
+              value: syslog
+            - tag: displayitem
+              value: interface_down_link
+            - tag: monclass
+              value: STD
+            - tag: monname
+              value: SysLog
+        - uuid: bbd030b940684073964e9c512c9f9466
+          name: 'Kernel: io error'
+          type: DEPENDENT
+          key: log.kern.io_error
+          delay: '0'
+          trends: '0'
+          value_type: LOG
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - '.*(?i:(i/o error|end_request: i/o error)).*'
+                - \0
+          master_item:
+            key: 'logrt[/var/log/kern.log,".*",,100,skip]'
+          tags:
+            - tag: component
+              value: syslog
+            - tag: displayitem
+              value: io_error
+            - tag: monclass
+              value: STD
+            - tag: monname
+              value: SysLog
+        - uuid: 486983c9658c4e82a80a396316e2b6b0
+          name: 'Kernel: kernel crit'
+          type: DEPENDENT
+          key: log.kern.kernel_crit
+          delay: '0'
+          trends: '0'
+          value_type: LOG
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - '.*(?i:kernel:\s*crit).*'
+                - \0
+          master_item:
+            key: 'logrt[/var/log/kern.log,".*",,100,skip]'
+          tags:
+            - tag: component
+              value: syslog
+            - tag: displayitem
+              value: kernel_crit
+            - tag: monclass
+              value: STD
+            - tag: monname
+              value: SysLog
+        - uuid: efb5b14c775345669a0b0ced017288bf
+          name: 'Kernel: kernel panic'
+          type: DEPENDENT
+          key: log.kern.kernel_panic
+          delay: '0'
+          trends: '0'
+          value_type: LOG
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - '.*(?i:kernel panic).*'
+                - \0
+          master_item:
+            key: 'logrt[/var/log/kern.log,".*",,100,skip]'
+          tags:
+            - tag: component
+              value: syslog
+            - tag: displayitem
+              value: kernel_panic
+            - tag: monclass
+              value: STD
+            - tag: monname
+              value: SysLog
+        - uuid: 4881354603214621a25d70d6b0bff819
+          name: 'Kernel: nic link down'
+          type: DEPENDENT
+          key: log.kern.nic_link_down
+          delay: '0'
+          trends: '0'
+          value_type: LOG
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - '.*(?i:(link is down|interface .* down)).*'
+                - \0
+          master_item:
+            key: 'logrt[/var/log/kern.log,".*",,100,skip]'
+          tags:
+            - tag: component
+              value: syslog
+            - tag: displayitem
+              value: nic_link_down
+            - tag: monclass
+              value: STD
+            - tag: monname
+              value: SysLog
+        - uuid: 52d0503ac2c14a2a82cbe161667544a3
+          name: 'Kernel: oom killer'
+          type: DEPENDENT
+          key: log.kern.oom_killer
+          delay: '0'
+          trends: '0'
+          value_type: LOG
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - '.*(?i:(out of memory|oom-killer)).*'
+                - \0
+          master_item:
+            key: 'logrt[/var/log/kern.log,".*",,100,skip]'
+          tags:
+            - tag: component
+              value: syslog
+            - tag: displayitem
+              value: oom_killer
+            - tag: monclass
+              value: STD
+            - tag: monname
+              value: SysLog
+        - uuid: 49c759168fc1429e918b3feb25614044
+          name: 'Kernel: raid degraded'
+          type: DEPENDENT
+          key: log.kern.raid_degraded
+          delay: '0'
+          trends: '0'
+          value_type: LOG
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - '.*(?i:(md.*degraded|raid.*degraded)).*'
+                - \0
+          master_item:
+            key: 'logrt[/var/log/kern.log,".*",,100,skip]'
+          tags:
+            - tag: component
+              value: syslog
+            - tag: displayitem
+              value: raid_degraded
+            - tag: monclass
+              value: STD
+            - tag: monname
+              value: SysLog
+        - uuid: 55db7b6ee0424b95a6bd73ea82bfd1e4
+          name: 'Kernel: read only fs'
+          type: DEPENDENT
+          key: log.kern.read_only_fs
+          delay: '0'
+          trends: '0'
+          value_type: LOG
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - '.*(?i:(remounting filesystem read-only|read-only file system)).*'
+                - \0
+          master_item:
+            key: 'logrt[/var/log/kern.log,".*",,100,skip]'
+          tags:
+            - tag: component
+              value: syslog
+            - tag: displayitem
+              value: read_only_fs
+            - tag: monclass
+              value: STD
+            - tag: monname
+              value: SysLog
+        - uuid: 91795525e2cc431c8898b4888b62e9d1
+          name: 'Kernel: selinux avc'
+          type: DEPENDENT
+          key: log.kern.selinux_avc
+          delay: '0'
+          trends: '0'
+          value_type: LOG
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - '.*(?i:avc: denied).*'
+                - \0
+          master_item:
+            key: 'logrt[/var/log/kern.log,".*",,100,skip]'
+          tags:
+            - tag: component
+              value: syslog
+            - tag: displayitem
+              value: selinux_avc
+            - tag: monclass
+              value: STD
+            - tag: monname
+              value: SysLog
+        - uuid: 96018b189d1442ef800cecb8b2419f0d
+          name: 'Kernel: soft lockup'
+          type: DEPENDENT
+          key: log.kern.soft_lockup
+          delay: '0'
+          trends: '0'
+          value_type: LOG
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - '.*(?i:soft lockup - cpu .* stuck).*'
+                - \0
+          master_item:
+            key: 'logrt[/var/log/kern.log,".*",,100,skip]'
+          tags:
+            - tag: component
+              value: syslog
+            - tag: displayitem
+              value: soft_lockup
+            - tag: monclass
+              value: STD
+            - tag: monname
+              value: SysLog
+        - uuid: 79911bb40a984f098ce5c2d8635daf97
+          name: 'Kernel: ssh failed password'
+          type: DEPENDENT
+          key: log.kern.ssh_failed_password
+          delay: '0'
+          trends: '0'
+          value_type: LOG
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - '.*(?i:sshd:.*failed password).*'
+                - \0
+          master_item:
+            key: 'logrt[/var/log/kern.log,".*",,100,skip]'
+          tags:
+            - tag: component
+              value: syslog
+            - tag: displayitem
+              value: ssh_failed_password
+            - tag: monclass
+              value: STD
+            - tag: monname
+              value: SysLog
+        - uuid: 67ffe911b2134da39d48e3d1c7e12288
+          name: 'Kernel: ssh invalid user'
+          type: DEPENDENT
+          key: log.kern.ssh_invalid_user
+          delay: '0'
+          trends: '0'
+          value_type: LOG
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - '.*(?i:sshd:.*invalid user).*'
+                - \0
+          master_item:
+            key: 'logrt[/var/log/kern.log,".*",,100,skip]'
+          tags:
+            - tag: component
+              value: syslog
+            - tag: displayitem
+              value: ssh_invalid_user
+            - tag: monclass
+              value: STD
+            - tag: monname
+              value: SysLog
+        - uuid: 9738496f30cb4fc3831817a24b4bf819
+          name: 'Kernel: sudo auth failure'
+          type: DEPENDENT
+          key: log.kern.sudo_auth_failure
+          delay: '0'
+          trends: '0'
+          value_type: LOG
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - '.*(?i:sudo:.*authentication failure).*'
+                - \0
+          master_item:
+            key: 'logrt[/var/log/kern.log,".*",,100,skip]'
+          tags:
+            - tag: component
+              value: syslog
+            - tag: displayitem
+              value: sudo_auth_failure
+            - tag: monclass
+              value: STD
+            - tag: monname
+              value: SysLog
+        - uuid: 85823d46887b48edb9c62ca9c568dc31
+          name: 'Messages: blk update request'
+          type: DEPENDENT
+          key: log.messages.blk_update_request
+          delay: '0'
+          trends: '0'
+          value_type: LOG
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - '.*(?i:blk_update_request).*'
+                - \0
+          master_item:
+            key: 'logrt[/var/log/messages,".*",,100,skip]'
+          tags:
+            - tag: component
+              value: syslog
+            - tag: displayitem
+              value: blk_update_request
+            - tag: monclass
+              value: STD
+            - tag: monname
+              value: SysLog
+        - uuid: acb35612118e40cb82d5de5762dc81ff
+          name: 'Messages: boks sshd'
+          type: DEPENDENT
+          key: log.messages.boks_sshd
+          delay: '0'
+          trends: '0'
+          value_type: LOG
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - '.*(?i:boks_sshd).*'
+                - \0
+          master_item:
+            key: 'logrt[/var/log/messages,".*",,100,skip]'
+          tags:
+            - tag: component
+              value: syslog
+            - tag: displayitem
+              value: boks_sshd
+            - tag: monclass
+              value: STD
+            - tag: monname
+              value: SysLog
+        - uuid: 43844771e9fa47c7a1a492ac1969732c
+          name: 'Messages: docker'
+          type: DEPENDENT
+          key: log.messages.docker
+          delay: '0'
+          trends: '0'
+          value_type: LOG
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - '.*(?i:docker).*'
+                - \0
+          master_item:
+            key: 'logrt[/var/log/messages,".*",,100,skip]'
+          tags:
+            - tag: component
+              value: syslog
+            - tag: displayitem
+              value: docker
+            - tag: monclass
+              value: STD
+            - tag: monname
+              value: SysLog
+        - uuid: 43d6b81c02e24429bf97f03e90e296c5
+          name: 'Messages: duplicate ip'
+          type: DEPENDENT
+          key: log.messages.duplicate_ip
+          delay: '0'
+          trends: '0'
+          value_type: LOG
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - '.*(?i:duplicate\s+ip).*'
+                - \0
+          master_item:
+            key: 'logrt[/var/log/messages,".*",,100,skip]'
+          tags:
+            - tag: component
+              value: syslog
+            - tag: displayitem
+              value: duplicate_ip
+            - tag: monclass
+              value: STD
+            - tag: monname
+              value: SysLog
+        - uuid: 1c16895a807946b8ab1ebac2fc50ad4a
+          name: 'Messages: ext4 error'
+          type: DEPENDENT
+          key: log.messages.ext4_error
+          delay: '0'
+          trends: '0'
+          value_type: LOG
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - '.*(?i:(EXT4-fs error|ext4.*error)).*'
+                - \0
+          master_item:
+            key: 'logrt[/var/log/messages,".*",,100,skip]'
+          tags:
+            - tag: component
+              value: syslog
+            - tag: displayitem
+              value: ext4_error
+            - tag: monclass
+              value: STD
+            - tag: monname
+              value: SysLog
+        - uuid: 8536b09c18184e3d8e3b52990b600221
+          name: 'Messages: goferd'
+          type: DEPENDENT
+          key: log.messages.goferd
+          delay: '0'
+          trends: '0'
+          value_type: LOG
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - '.*(?i:goferd).*'
+                - \0
+          master_item:
+            key: 'logrt[/var/log/messages,".*",,100,skip]'
+          tags:
+            - tag: component
+              value: syslog
+            - tag: displayitem
+              value: goferd
+            - tag: monclass
+              value: STD
+            - tag: monname
+              value: SysLog
+        - uuid: 5dbcfae89fa84f6c88bafaaf35cf2e15
+          name: 'Messages: interface down link'
+          type: DEPENDENT
+          key: log.messages.interface_down_link
+          delay: '0'
+          trends: '0'
+          value_type: LOG
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - '.*(?i:interface\s+with\s+a\s+down\s+link).*'
+                - \0
+          master_item:
+            key: 'logrt[/var/log/messages,".*",,100,skip]'
+          tags:
+            - tag: component
+              value: syslog
+            - tag: displayitem
+              value: interface_down_link
+            - tag: monclass
+              value: STD
+            - tag: monname
+              value: SysLog
+        - uuid: 2e63d7c2ef22439da5b9a93a4fa4d009
+          name: 'Messages: io error'
+          type: DEPENDENT
+          key: log.messages.io_error
+          delay: '0'
+          trends: '0'
+          value_type: LOG
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - '.*(?i:(i/o error|end_request: i/o error)).*'
+                - \0
+          master_item:
+            key: 'logrt[/var/log/messages,".*",,100,skip]'
+          tags:
+            - tag: component
+              value: syslog
+            - tag: displayitem
+              value: io_error
+            - tag: monclass
+              value: STD
+            - tag: monname
+              value: SysLog
+        - uuid: 6249e99532ae4f19882a4b579616d0a1
+          name: 'Messages: kernel crit'
+          type: DEPENDENT
+          key: log.messages.kernel_crit
+          delay: '0'
+          trends: '0'
+          value_type: LOG
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - '.*(?i:kernel:\s*crit).*'
+                - \0
+          master_item:
+            key: 'logrt[/var/log/messages,".*",,100,skip]'
+          tags:
+            - tag: component
+              value: syslog
+            - tag: displayitem
+              value: kernel_crit
+            - tag: monclass
+              value: STD
+            - tag: monname
+              value: SysLog
+        - uuid: 55d5c3f577be4ce0b10a789970ce8638
+          name: 'Messages: kernel panic'
+          type: DEPENDENT
+          key: log.messages.kernel_panic
+          delay: '0'
+          trends: '0'
+          value_type: LOG
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - '.*(?i:kernel panic).*'
+                - \0
+          master_item:
+            key: 'logrt[/var/log/messages,".*",,100,skip]'
+          tags:
+            - tag: component
+              value: syslog
+            - tag: displayitem
+              value: kernel_panic
+            - tag: monclass
+              value: STD
+            - tag: monname
+              value: SysLog
+        - uuid: 0d8745e6c3bf492dbd84c947af29dffb
+          name: 'Messages: nic link down'
+          type: DEPENDENT
+          key: log.messages.nic_link_down
+          delay: '0'
+          trends: '0'
+          value_type: LOG
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - '.*(?i:(link is down|interface .* down)).*'
+                - \0
+          master_item:
+            key: 'logrt[/var/log/messages,".*",,100,skip]'
+          tags:
+            - tag: component
+              value: syslog
+            - tag: displayitem
+              value: nic_link_down
+            - tag: monclass
+              value: STD
+            - tag: monname
+              value: SysLog
+        - uuid: 3416d1a100d24a429a7ac7698ce1155e
+          name: 'Messages: oom killer'
+          type: DEPENDENT
+          key: log.messages.oom_killer
+          delay: '0'
+          trends: '0'
+          value_type: LOG
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - '.*(?i:(out of memory|oom-killer)).*'
+                - \0
+          master_item:
+            key: 'logrt[/var/log/messages,".*",,100,skip]'
+          tags:
+            - tag: component
+              value: syslog
+            - tag: displayitem
+              value: oom_killer
+            - tag: monclass
+              value: STD
+            - tag: monname
+              value: SysLog
+        - uuid: d302a4ae88024a1b9b86db4fadfca20c
+          name: 'Messages: raid degraded'
+          type: DEPENDENT
+          key: log.messages.raid_degraded
+          delay: '0'
+          trends: '0'
+          value_type: LOG
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - '.*(?i:(md.*degraded|raid.*degraded)).*'
+                - \0
+          master_item:
+            key: 'logrt[/var/log/messages,".*",,100,skip]'
+          tags:
+            - tag: component
+              value: syslog
+            - tag: displayitem
+              value: raid_degraded
+            - tag: monclass
+              value: STD
+            - tag: monname
+              value: SysLog
+        - uuid: 68fd3ea533e8456ca39392d36cda026a
+          name: 'Messages: read only fs'
+          type: DEPENDENT
+          key: log.messages.read_only_fs
+          delay: '0'
+          trends: '0'
+          value_type: LOG
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - '.*(?i:(remounting filesystem read-only|read-only file system)).*'
+                - \0
+          master_item:
+            key: 'logrt[/var/log/messages,".*",,100,skip]'
+          tags:
+            - tag: component
+              value: syslog
+            - tag: displayitem
+              value: read_only_fs
+            - tag: monclass
+              value: STD
+            - tag: monname
+              value: SysLog
+        - uuid: 6aa717d346af4b08987ee28df3aa4850
+          name: 'Messages: selinux avc'
+          type: DEPENDENT
+          key: log.messages.selinux_avc
+          delay: '0'
+          trends: '0'
+          value_type: LOG
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - '.*(?i:avc: denied).*'
+                - \0
+          master_item:
+            key: 'logrt[/var/log/messages,".*",,100,skip]'
+          tags:
+            - tag: component
+              value: syslog
+            - tag: displayitem
+              value: selinux_avc
+            - tag: monclass
+              value: STD
+            - tag: monname
+              value: SysLog
+        - uuid: 8c007b58990f47939e89de11ae1d38bf
+          name: 'Messages: soft lockup'
+          type: DEPENDENT
+          key: log.messages.soft_lockup
+          delay: '0'
+          trends: '0'
+          value_type: LOG
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - '.*(?i:soft lockup - cpu .* stuck).*'
+                - \0
+          master_item:
+            key: 'logrt[/var/log/messages,".*",,100,skip]'
+          tags:
+            - tag: component
+              value: syslog
+            - tag: displayitem
+              value: soft_lockup
+            - tag: monclass
+              value: STD
+            - tag: monname
+              value: SysLog
+        - uuid: 15a05d7e4127414c87d630293064784b
+          name: 'Messages: ssh failed password'
+          type: DEPENDENT
+          key: log.messages.ssh_failed_password
+          delay: '0'
+          trends: '0'
+          value_type: LOG
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - '.*(?i:sshd:.*failed password).*'
+                - \0
+          master_item:
+            key: 'logrt[/var/log/messages,".*",,100,skip]'
+          tags:
+            - tag: component
+              value: syslog
+            - tag: displayitem
+              value: ssh_failed_password
+            - tag: monclass
+              value: STD
+            - tag: monname
+              value: SysLog
+        - uuid: 50f5feff70a347858955b04fce19ad7e
+          name: 'Messages: ssh invalid user'
+          type: DEPENDENT
+          key: log.messages.ssh_invalid_user
+          delay: '0'
+          trends: '0'
+          value_type: LOG
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - '.*(?i:sshd:.*invalid user).*'
+                - \0
+          master_item:
+            key: 'logrt[/var/log/messages,".*",,100,skip]'
+          tags:
+            - tag: component
+              value: syslog
+            - tag: displayitem
+              value: ssh_invalid_user
+            - tag: monclass
+              value: STD
+            - tag: monname
+              value: SysLog
+        - uuid: da1373babbcb43709957ee08e38078d9
+          name: 'Messages: sudo auth failure'
+          type: DEPENDENT
+          key: log.messages.sudo_auth_failure
+          delay: '0'
+          trends: '0'
+          value_type: LOG
+          preprocessing:
+            - type: REGEX
+              parameters:
+                - '.*(?i:sudo:.*authentication failure).*'
+                - \0
+          master_item:
+            key: 'logrt[/var/log/messages,".*",,100,skip]'
+          tags:
+            - tag: component
+              value: syslog
+            - tag: displayitem
+              value: sudo_auth_failure
+            - tag: monclass
+              value: STD
+            - tag: monname
+              value: SysLog
+        - uuid: 877db7238e97405d99281fc45e79c3c9
+          name: 'syslog kern.log (master)'
+          type: ZABBIX_ACTIVE
+          key: 'logrt[/var/log/kern.log,".*",,100,skip]'
+          delay: 30s
+          history: '0'
+          trends: '0'
+          value_type: LOG
+          preprocessing:
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 5m
+          tags:
+            - tag: displayitem
+              value: syslog
+            - tag: montype
+              value: LO
+        - uuid: ef1cd593408b4a87852dfb488626d3b0
+          name: 'syslog messages (master)'
+          type: ZABBIX_ACTIVE
+          key: 'logrt[/var/log/messages,".*",,100,skip]'
+          delay: 30s
+          history: '0'
+          trends: '0'
+          value_type: LOG
+          preprocessing:
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 5m
+          tags:
+            - tag: displayitem
+              value: syslog
+            - tag: montype
+              value: LO
+      tags:
+        - tag: FISTemplateVersion
+          value: 1.2.3
+        - tag: montype
+          value: LO
+        - tag: ostype
+          value: LZ
+        - tag: templatename
+          value: 'FIS-Global-Linux STD Syslog (Best Practice)'
+      macros:
+        - macro: '{$SYSLOG.PATTERN.CRIT.COUNT}'
+          value: '3'
+        - macro: '{$SYSLOG.PATTERN.WARN.COUNT}'
+          value: '1'
+        - macro: '{$SYSLOG.WINDOW}'
+          value: '#5m'
